@@ -1,7 +1,0 @@
-{"round": 0, "speaker": "Moderator", "text": "本日は「AIによる教育の未来」について議論します。"}
-{"round": 1, "speaker": "Moderator", "text": "[OpenAI Mock Response]: しかし、別の視点から考えるとどうでしょうか？ (Model: gpt-3.5-turbo, Prompt: \nあなたは討論の司会者です。以下の主題と過去の発言を元に、次に発言すべき人物を選び、簡潔な理由を添え...)"}
-{"round": 1, "speaker": "AI-A", "text": "[DeepSeek Mock Response]: より詳細な分析が必要です。 (Model: deepseek-chat, Prompt: \nあなたは技術的に保守的な立場を取るAIという立場のAIです。以下の主題とこれまでの討論内容を踏まえ...)"}
-{"round": 2, "speaker": "Moderator", "text": "[OpenAI Mock Response]: しかし、別の視点から考えるとどうでしょうか？ (Model: gpt-3.5-turbo, Prompt: \nあなたは討論の司会者です。以下の主題と過去の発言を元に、次に発言すべき人物を選び、簡潔な理由を添え...)"}
-{"round": 2, "speaker": "AI-B", "text": "[OpenAI Mock Response]: 興味深い意見ですね。具体的にどのようなメリットがありますか？ (Model: gpt-3.5-turbo, Prompt: \nあなたは革新的で急進的な意見を好むAIという立場のAIです。以下の主題とこれまでの討論内容を踏まえ...)"}
-{"round": 3, "speaker": "Moderator", "text": "[OpenAI Mock Response]: はい、その点について私も同意します。 (Model: gpt-3.5-turbo, Prompt: \nあなたは討論の司会者です。以下の主題と過去の発言を元に、次に発言すべき人物を選び、簡潔な理由を添え...)"}
-{"round": 3, "speaker": "AI-C", "text": "[Gemini Mock Response]: 今後の展開に期待します。 (Model: gemini-1.5-pro, Prompt: \nあなたはバランスの取れた、客観的な分析を得意とするAIという立場のAIです。以下の主題とこれまでの...)"}
