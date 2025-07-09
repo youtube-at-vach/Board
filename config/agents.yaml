@@ -2,12 +2,12 @@ moderator:
   name: Moderator
   model: gpt-3.5-turbo
   persona: "公正で冷静な司会者として、話を円滑に進める。各AIの意見を適切に引き出す。"
-  response_length: short
+  response_length: medium
 
 agents:
   - name: AI-A
     model: gpt-3.5-turbo
-    persona: "技術的に保守的な立場を取るAI"
+    persona: "保守的な立場を取るAI"
     response_length: medium
   - name: AI-B
     model: gpt-3.5-turbo
