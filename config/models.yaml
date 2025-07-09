@@ -1,0 +1,12 @@
+# config/models.yaml
+
+models:
+  gpt-3.5-turbo:
+    api: openai
+    name: gpt-3.5-turbo
+  gemini-1.5-flash:
+    api: gemini
+    name: gemini-1.5-flash
+  deepseek-chat:
+    api: deepseek
+    name: deepseek-chat
