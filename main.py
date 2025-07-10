@@ -20,9 +20,12 @@ def main():
     parser.add_argument('--rounds', type=int, default=5, help='Number of discussion rounds.')
     parser.add_argument('--debug', action='store_true', help='Enable debug output.')
     parser.add_argument('--summarize-rounds', action='store_true', help='Moderator summarizes each round.')
+    parser.add_argument('--conversation-mode', action='store_true', help='Enable conversation-like discussion mode.')
     args = parser.parse_args()
 
     DEBUG_MODE = args.debug
+
+    print(f"Conversation Mode: {args.conversation_mode}")
 
     print(f"Discussion Topic: {args.topic}")
     print(f"Number of Rounds: {args.rounds}")
@@ -47,8 +50,8 @@ def main():
         print(f"Agent: {agent['name']} ({agent['model']})")
     print("--------------------------")
 
-    moderator_engine = ModeratorEngine(moderator_config)
-    agent_engine = AgentEngine(agent_configs)
+    moderator_engine = ModeratorEngine(moderator_config, args.conversation_mode)
+    agent_engine = AgentEngine(agent_configs, args.conversation_mode)
     state_tracker = StateTracker()
 
     # Initial moderator statement
@@ -61,14 +64,14 @@ def main():
         
         # Moderator decides next speaker
         next_speaker_name, moderator_statement = moderator_engine.decide_next_speaker(
-            args.topic, state_tracker.get_history(), round_num, agent_configs
+            args.topic, state_tracker.get_recent_history(max_tokens=4000), round_num, agent_configs
         )
         state_tracker.add_message(round_num, moderator_config['name'], moderator_statement)
         print(f"{COLOR_MODERATOR}[{moderator_config['name']}]:{COLOR_RESET}\n> {moderator_statement}")
 
         # Agent responds
         agent_response = agent_engine.get_agent_response(
-            next_speaker_name, args.topic, state_tracker.get_history()
+            next_speaker_name, args.topic, state_tracker.get_recent_history(max_tokens=4000)
         )
         state_tracker.add_message(round_num, next_speaker_name, agent_response)
         

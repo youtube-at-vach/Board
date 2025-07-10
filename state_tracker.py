@@ -20,6 +20,21 @@ class StateTracker:
     def get_history(self):
         return self.discussion_history
 
+    def get_recent_history(self, max_tokens):
+        recent_history = []
+        current_tokens = 0
+        # Iterate in reverse to get the most recent messages first
+        for message in reversed(self.discussion_history):
+            # A very rough estimate: 1 token ~ 4 characters for Japanese
+            message_length = len(message["text"]) + len(message["speaker"]) + 5 # Add some buffer for speaker name and formatting
+            if current_tokens + message_length <= max_tokens:
+                recent_history.append(message)
+                current_tokens += message_length
+            else:
+                break
+        # Return in chronological order
+        return list(reversed(recent_history))
+
     def save_logs(self, topic):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         # Sanitize topic for filename

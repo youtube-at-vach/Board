@@ -10,9 +10,24 @@ debug_print("Loading llm_api.py (real OpenAI and Gemini APIs)")
 
 # Mapping for response length to max_tokens and prompt instruction
 RESPONSE_LENGTH_SETTINGS = {
-    "short": {"max_tokens": 50, "instruction": "簡潔に、2〜3文で回答してください。"},
-    "medium": {"max_tokens": 150, "instruction": "要点をまとめて、5〜7文で回答してください。"},
-    "long": {"max_tokens": 300, "instruction": "詳細に、具体的な例を交えて回答してください。"},
+    "short": {
+        "max_tokens": 50,
+        "instruction": "短く1文で、50トークン以内に収めてください。",
+        "temperature": 0.4,
+        "top_p": 0.8,
+    },
+    "medium": {
+        "max_tokens": 250,
+        "instruction": "3〜5文で要点をまとめ、250トークンを超えないようにしてください。",
+        "temperature": 0.6,
+        "top_p": 0.9,
+    },
+    "long": {
+        "max_tokens": 500,
+        "instruction": "詳細に、具体的な例を交えて会話調で回答してください。500トークンを超えないようにしてください。",
+        "temperature": 0.7,
+        "top_p": 1.0,
+    },
 }
 
 # --- OpenAI API Implementation ---
@@ -28,22 +43,28 @@ class OpenAIAPI:
         settings = RESPONSE_LENGTH_SETTINGS.get(response_length, RESPONSE_LENGTH_SETTINGS["medium"])
         instruction = settings["instruction"]
         max_tokens = settings["max_tokens"]
+        temperature = settings.get("temperature", 0.7)  # fallback 値あり
+        top_p = settings.get("top_p", 1.0)
 
         full_prompt = f"{prompt}\n\n{instruction}"
 
         debug_print(f"OpenAIAPI generate called with model '{model_name}', length '{response_length}' and prompt: {full_prompt[:100]}...")
+
         try:
             chat_completion = self.client.chat.completions.create(
                 model=model_name,
                 messages=[
                     {"role": "user", "content": full_prompt}
                 ],
-                max_tokens=max_tokens
+                max_tokens=max_tokens,
+                temperature=temperature,
+                top_p=top_p
             )
             return chat_completion.choices[0].message.content
         except Exception as e:
             debug_print(f"Error calling OpenAI API: {e}")
             return f"[OpenAI API Error]: {e}"
+
 
 # --- Mock API Implementations (for DeepSeek) ---
 class DeepSeekAPI:
@@ -67,20 +88,29 @@ class GeminiAPI:
     def generate(self, prompt, model_name, response_length="medium"):
         settings = RESPONSE_LENGTH_SETTINGS.get(response_length, RESPONSE_LENGTH_SETTINGS["medium"])
         instruction = settings["instruction"]
-        max_tokens = settings["max_tokens"]
+        max_tokens = settings.get("max_tokens", 150)
+        temperature = settings.get("temperature", 0.7)
+        top_p = settings.get("top_p", 1.0)
 
         full_prompt = f"{prompt}\n\n{instruction}"
 
         debug_print(f"GeminiAPI generate called with model '{model_name}', length '{response_length}' and prompt: {full_prompt[:100]}...")
+
         try:
             model = genai.GenerativeModel(model_name)
-            response = model.generate_content(full_prompt)
-            # Gemini API does not have a direct max_tokens parameter for generate_content
-            # We will rely on the prompt instruction for conciseness.
+            response = model.generate_content(
+                full_prompt,
+                generation_config=genai.types.GenerationConfig(
+                    max_output_tokens=max_tokens,
+                    temperature=temperature,
+                    top_p=top_p
+                )
+            )
             return response.text
         except Exception as e:
             debug_print(f"Error calling Gemini API: {e}")
             return f"[Gemini API Error]: {e}"
+
 
 API_CLIENTS = {
     "openai": OpenAIAPI(),
